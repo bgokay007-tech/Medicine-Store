@@ -271,7 +271,7 @@ a {
     font-size: 12px
 }
 
-.user-dropdown > span {
+.user-dropdown>span {
     color: var(--muted);
     font-size: 10px;
     padding-bottom: 5px;
@@ -1446,6 +1446,184 @@ tbody tr:last-child td {
     width: 0;
     height: 0;
     overflow: hidden
+}
+
+/* Login frame alignment */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0
+}
+
+.login-shell {
+    min-height: 100vh;
+    grid-template-columns: 1.08fr .92fr;
+    background: #f7f8fa;
+    overflow: hidden
+}
+
+.login-art {
+    background: transparent;
+    padding: 37px 9%;
+    overflow: hidden
+}
+
+.login-art:before {
+    content: '';
+    position: absolute;
+    width: 128px;
+    height: 128px;
+    right: 13%;
+    top: 29%;
+    border-radius: 50%;
+    background: #e8e9ee;
+    box-shadow: inset -13px -8px 0 rgba(190, 190, 198, .28), 10px 15px 0 rgba(215, 216, 222, .35);
+    transform: rotate(-28deg)
+}
+
+.login-art:after {
+    width: 270px;
+    height: 90px;
+    right: -12px;
+    bottom: 35px;
+    border: 0;
+    border-radius: 50%;
+    background: repeating-linear-gradient(25deg, transparent 0 18px, #e4f1eb 19px 35px);
+    opacity: .9;
+    transform: rotate(-18deg)
+}
+
+.login-art .art-topline {
+    padding: 0;
+    color: #26312e;
+    z-index: 1
+}
+
+.login-art .brand-mark {
+    width: 31px;
+    height: 31px;
+    border-radius: 0;
+    background: #55b879;
+    color: #fff;
+    font-size: 22px
+}
+
+.login-art .art-topline span {
+    color: #26312e;
+    font-size: 14px
+}
+
+.art-copy {
+    margin: auto 0;
+    z-index: 1
+}
+
+.art-copy h1 {
+    max-width: 580px;
+    margin: 0;
+    color: #202327;
+    font: 800 clamp(38px, 4vw, 59px)/1.08 Manrope;
+    letter-spacing: -.055em
+}
+
+.art-copy h1 em {
+    color: #55b879
+}
+
+.art-copy p,
+.art-footer,
+.login-hint {
+    display: none
+}
+
+.login-panel {
+    padding: 30px 9%;
+    background: transparent;
+    place-items: center
+}
+
+.login-card {
+    width: min(265px, 100%)
+}
+
+.login-card h2 {
+    margin: 0 0 24px;
+    color: #202327;
+    font: 700 26px Manrope;
+    letter-spacing: -.04em
+}
+
+.auth-form {
+    gap: 13px;
+    margin-top: 0
+}
+
+.auth-form label {
+    gap: 5px
+}
+
+.auth-form input {
+    height: 37px;
+    border-color: #e5e7eb;
+    border-radius: 20px;
+    background: #fff;
+    padding: 0 15px;
+    font-size: 10px
+}
+
+.password-input input {
+    padding-right: 37px
+}
+
+.password-input button {
+    top: 8px;
+    right: 9px
+}
+
+.auth-form small {
+    padding-left: 12px
+}
+
+.full-btn {
+    height: 37px;
+    min-height: 37px;
+    border-radius: 20px;
+    margin-top: 12px;
+    background: #55b879;
+    font-size: 10px
+}
+
+.full-btn:hover {
+    background: #419e65
+}
+
+@media(max-width:700px) {
+    .login-shell {
+        background: #f7f8fa
+    }
+
+    .login-panel {
+        padding: 28px 25px
+    }
+
+    .mobile-logo {
+        display: block;
+        margin-bottom: 28px
+    }
+
+    .login-card {
+        width: min(330px, 100%)
+    }
+
+    .login-card h2 {
+        margin-bottom: 24px
+    }
 }
 
 .sprite-icon {

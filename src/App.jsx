@@ -65,19 +65,18 @@ function LoginPage() {
     };
     return <main className="login-shell">
         <section className="login-art">
-            <div className="art-topline"><Logo /><span>Medicine Store</span></div>
-            <div className="art-copy"><span className="eyebrow">PHARMACY OPERATIONS</span><h1>Care begins<br /><em>with clarity.</em></h1><p>A calm, intelligent workspace for your pharmacy team.</p></div>
-            <div className="art-footer"><span>© 2024 Medicine Store</span><span>Admin workspace</span></div>
+            <div className="art-topline"><Logo /><span>E-Pharmacy</span></div>
+            <div className="art-copy"><h1>Your medication,<br />delivered. Say goodbye<br />to all <em>your healthcare</em><br />worries with us</h1></div>
         </section>
         <section className="login-panel">
             <div className="login-card">
                 <div className="mobile-logo"><Logo /></div>
-                <span className="eyebrow">WELCOME BACK</span><h2>Sign in to your account</h2><p className="muted">Manage your pharmacy with confidence.</p>
+                <h2>Log in</h2>
                 <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
-                    <label>Email address<input type="email" placeholder="vendor@gmail.com" {...register('email')} />{errors.email && <small>{errors.email.message}</small>}</label>
-                    <label>Password<div className="password-input"><input type={showPassword ? 'text' : 'password'} placeholder="Enter your password" {...register('password')} /><button type="button" onClick={() => setShowPassword(!showPassword)} aria-label="Toggle password visibility">{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div>{errors.password && <small>{errors.password.message}</small>}</label>
+                    <label><span className="sr-only">Email address</span><input type="email" placeholder="Email address" {...register('email')} />{errors.email && <small>{errors.email.message}</small>}</label>
+                    <label><span className="sr-only">Password</span><div className="password-input"><input type={showPassword ? 'text' : 'password'} placeholder="Password" {...register('password')} /><button type="button" onClick={() => setShowPassword(!showPassword)} aria-label="Toggle password visibility">{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div>{errors.password && <small>{errors.password.message}</small>}</label>
                     {serverError && <div className="form-error">{serverError}</div>}
-                    <button className="primary-btn full-btn" disabled={isSubmitting}>{isSubmitting ? 'Signing in...' : 'Log in now'}<ChevronRight size={18} /></button>
+                    <button className="primary-btn full-btn" disabled={isSubmitting}>{isSubmitting ? 'Signing in...' : 'Log in'}</button>
                 </form>
                 <div className="login-hint"><ShieldCheck size={16} /><span>Secure access for authorized team members</span></div>
             </div>
