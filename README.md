@@ -9,7 +9,17 @@ npm install
 npm run dev
 ```
 
-The Vite client runs on `http://localhost:5173` and the API on `http://localhost:4000`.
+The Vite client runs on `http://localhost:5173` and the API on `http://localhost:4000`. After login the app opens `/home`.
+
+## Deploy on Render
+
+1. Push the repo to GitHub.
+2. In Render, create a **Web Service** from the repo (or use `render.yaml`).
+3. Build command: `npm install && npm run build`
+4. Start command: `npm start`
+5. Set `NODE_ENV=production`, a strong `JWT_SECRET`, and `MONGODB_URI`.
+
+The production server serves the Vite `dist` build and the `/api` routes from the same host.
 
 Demo account:
 
