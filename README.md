@@ -1,6 +1,46 @@
 # Medicine Store Admin
 
-React + Express admin dashboard for an e-pharmacy workflow.
+React + Vite admin dashboard for an e-pharmacy. Authentication and all data collections run on **Firebase** (Auth + Cloud Firestore). The UI follows the provided Figma admin dashboard.
+
+## About
+
+An admin logs in, then manages pharmacy statistics, orders, products, suppliers, and customers. The first successful login with the demo account seeds Firestore collections automatically.
+
+## Tech stack
+
+- React 18 + Vite
+- React Router, React Hook Form, Yup
+- MUI X Date Pickers
+- Firebase Authentication
+- Cloud Firestore
+
+## Design and task
+
+- Figma: [Admin dashboard](https://www.figma.com/design/z1JklHHxX8kTGo3zWvlzat/Admin-dashboard?node-id=0-1)
+- Technical task: login, dashboard statistics, orders, products, suppliers, customers, filters, add/edit/delete, JWT-style session via Firebase Auth
+
+## Firebase setup
+
+1. Create a project at [Firebase Console](https://console.firebase.google.com/).
+2. Enable **Authentication → Email/Password**.
+3. Create a **Cloud Firestore** database (start in test mode, then publish `firestore.rules`).
+4. Project settings → Your apps → Web app → copy the config.
+5. Copy `.env.example` to `.env` and paste the values:
+
+```bash
+copy .env.example .env
+```
+
+```
+VITE_FIREBASE_API_KEY=...
+VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your-project
+VITE_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=...
+VITE_FIREBASE_APP_ID=...
+```
+
+6. In Firestore rules, allow signed-in admins only (this repo includes `firestore.rules`).
 
 ## Run locally
 
@@ -9,32 +49,23 @@ npm install
 npm run dev
 ```
 
-The Vite client runs on `http://localhost:5173` and the API on `http://localhost:4000`. After login the app opens `/home`.
-
-## Deploy on Render
-
-1. Push the repo to GitHub.
-2. In Render, create a **Web Service** from the repo (or use `render.yaml`).
-3. Build command: `npm install && npm run build`
-4. Start command: `npm start`
-5. Set `NODE_ENV=production`, a strong `JWT_SECRET`, and `MONGODB_URI`.
-
-The production server serves the Vite `dist` build and the `/api` routes from the same host.
+Open `http://localhost:5173`. After login the app opens `/home`.
 
 Demo account:
 
 - Email: `vendor@gmail.com`
 - Password: `12345678`
 
-The API uses seeded in-memory data when `MONGODB_URI` is not configured. For persistent data, copy `.env.example` to `.env`, set `MONGODB_URI`, and restart the server. The API connects once at startup, seeds empty collections, and uses Mongoose validation for products, suppliers, customers, and orders.
+The first login creates this Firebase user if it does not exist, then seeds products, suppliers, customers, orders, and income/expense documents.
 
-Available API features under `/api`:
+## Deploy
 
-- `POST /user/login`, `GET /user/user-info`, and `GET /user/logout` with JWT authentication and revoked logout tokens.
-- `GET /dashboard` with live collection counts and recent activity.
-- `GET /products`, `/orders`, `/customers`, and `/suppliers` with `search`, `page`, `limit`, `sort`, and `order` query parameters.
-- Product and supplier create/update/delete endpoints, plus validated customer updates.
-- `GET /customers/:customerId` with the customer profile and order history.
-- `GET /health` reports whether the server is using `mongodb` or the memory fallback.
+Build a static site and host it on Netlify, GitHub Pages, or Render:
 
-The UI includes responsive 320px, 375px, tablet, and desktop layouts, paginated customer data, customer detail pages, sorting controls, working Settings/Activity routes, and persistent favicon/font assets.
+```bash
+npm run build
+```
+
+Set the same `VITE_FIREBASE_*` variables in the host dashboard **before** the build, so Vite can embed them.
+
+On Render, `render.yaml` builds the Vite app and serves `dist` with `npm start`.

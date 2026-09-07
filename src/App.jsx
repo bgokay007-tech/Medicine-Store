@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 import SharedLayout from './components/SharedLayout';
+import { useAuth } from './firebase/auth';
 import AllOrdersPage from './pages/AllOrdersPage';
 import AllProductsPage from './pages/AllProductsPage';
 import AllSuppliersPage from './pages/AllSuppliersPage';
@@ -10,9 +11,10 @@ import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
 
 export default function App() {
+    const { user } = useAuth();
     return (
         <Routes>
-            <Route path="/login" element={<LoginPage />} />
+            <Route path="/login" element={user ? <Navigate to="/home" replace /> : <LoginPage />} />
             <Route element={<ProtectedRoute><SharedLayout /></ProtectedRoute>}>
                 <Route path="/" element={<Navigate to="/home" replace />} />
                 <Route path="/home" element={<DashboardPage />} />

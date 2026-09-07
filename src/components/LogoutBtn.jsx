@@ -5,9 +5,7 @@ import Icon from './Icon';
 export default function LogoutBtn({ className = '' }) {
     const navigate = useNavigate();
     const logout = async () => {
-        try { await request('/user/logout', { headers: { 'X-Refresh-Token': localStorage.getItem('ep_refresh') || '' } }); } catch { /* token is cleared locally either way */ }
-        localStorage.removeItem('ep_token');
-        localStorage.removeItem('ep_refresh');
+        try { await request('/user/logout'); } catch { /* session is cleared locally either way */ }
         navigate('/login');
     };
     return (
