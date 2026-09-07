@@ -89,6 +89,7 @@ function Shell({ children }) {
     const navigate = useNavigate();
     const location = useLocation();
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
     const logout = async () => { try { await request('/user/logout'); } catch { } localStorage.removeItem('ep_token'); navigate('/login'); };
     return <div className="app-shell">
         <aside className={`sidebar ${mobileOpen ? 'open' : ''}`}>
@@ -99,7 +100,7 @@ function Shell({ children }) {
             <div className="sidebar-help"><CircleHelp size={18} /><div><strong>Need help?</strong><span>Contact support</span></div><ChevronRight size={16} /></div>
         </aside>
         <div className="main-wrap">
-            <header className="topbar"><button className="mobile-menu" onClick={() => setMobileOpen(true)}><Menu size={21} /></button><div className="breadcrumbs"><span>Medicine Store</span><ChevronRight size={15} /><strong>{navItems.find((item) => location.pathname.startsWith(item.to))?.label || 'Dashboard'}</strong></div><div className="top-actions"><button className="icon-btn notification"><Bell size={19} /><i /></button><div className="user-menu"><div className="avatar">CS</div><div className="user-details"><strong>Clayton Santos</strong><span>vendor@gmail.com</span></div><ChevronDown size={16} /></div></div></header>
+            <header className="topbar"><button className="mobile-menu" onClick={() => setMobileOpen(true)}><Menu size={21} /></button><div className="breadcrumbs"><span>Medicine Store</span><ChevronRight size={15} /><strong>{navItems.find((item) => location.pathname.startsWith(item.to))?.label || 'Dashboard'}</strong></div><div className="top-actions"><button className="icon-btn notification"><Bell size={19} /><i /></button><div className={`user-menu ${userMenuOpen ? 'open' : ''}`}><div className="avatar">CS</div><div className="user-details"><strong>Clayton Santos</strong><span>vendor@gmail.com</span></div><button className="user-menu-toggle" onClick={() => setUserMenuOpen((open) => !open)} aria-label="Open user menu" aria-expanded={userMenuOpen}><ChevronDown size={16} /></button>{userMenuOpen && <div className="user-dropdown"><strong>Clayton Santos</strong><span>vendor@gmail.com</span><NavLink to="/settings" onClick={() => setUserMenuOpen(false)}><Settings size={15} /> Settings</NavLink><button onClick={logout}><LogOut size={15} /> Log out</button></div>}</div></div></header>
             <main className="page-content">{children}</main>
         </div>
     </div>;
@@ -138,11 +139,11 @@ function Pagination({ pagination, onChange }) { if (pagination.pages <= 1) retur
 
 function DataRow({ type, item, onEdit, onDelete }) {
     const navigate = useNavigate();
-    const person = (name, sub) => <div className="person-cell"><div className="avatar light">{name.split(' ').map((part) => part[0]).join('').slice(0, 2)}</div><div><strong>{name}</strong><span>{sub}</span></div></div>;
+    const person = (name, sub) => { const displayName = String(name || 'Unknown'); return <div className="person-cell"><div className="avatar light">{displayName.split(' ').map((part) => part[0]).join('').slice(0, 2)}</div><div><strong>{displayName}</strong><span>{sub || '-'}</span></div></div>; };
     const action = <div className="row-actions"><button onClick={(event) => { event.stopPropagation(); onEdit(); }} aria-label="Edit"><Pencil size={16} /></button>{type === 'products' && <button onClick={(event) => { event.stopPropagation(); onDelete(); }} aria-label="Delete"><Trash2 size={16} /></button>}</div>;
-    if (type === 'products') return <tr><td>{person(item.name, item.sku)}</td><td><span className="tag">{item.category}</span></td><td><strong>{item.stock}</strong><span className="sub-cell"> units</span></td><td>{item.suppliers}</td><td><strong>${item.price.toFixed(2)}</strong></td><td>{action}</td></tr>;
-    if (type === 'orders') return <tr><td>{person(item.userName, item.email)}</td><td>{item.address}</td><td>{item.products}</td><td>{item.orderDate}</td><td><strong>${item.price.toFixed(2)}</strong></td><td><span className={`status ${item.status.toLowerCase()}`}>{item.status}</span></td></tr>;
-    if (type === 'suppliers') return <tr><td>{person(item.name, item.email)}</td><td>{item.address}</td><td>{item.company}</td><td>{item.deliveryDate}</td><td><strong>${item.amount.toFixed(2)}</strong></td><td><span className={`status ${item.status.toLowerCase()}`}>{item.status}</span></td><td>{action}</td></tr>;
+    if (type === 'products') return <tr><td>{person(item.name, item.sku)}</td><td><span className="tag">{item.category || '-'}</span></td><td><strong>{item.stock ?? 0}</strong><span className="sub-cell"> units</span></td><td>{item.suppliers || '-'}</td><td><strong>${Number(item.price || 0).toFixed(2)}</strong></td><td>{action}</td></tr>;
+    if (type === 'orders') return <tr><td>{person(item.userName, item.email)}</td><td>{item.address || '-'}</td><td>{item.products || '-'}</td><td>{item.orderDate || '-'}</td><td><strong>${Number(item.price || 0).toFixed(2)}</strong></td><td><span className={`status ${String(item.status || 'pending').toLowerCase()}`}>{item.status || 'Pending'}</span></td></tr>;
+    if (type === 'suppliers') return <tr><td>{person(item.name, item.email)}</td><td>{item.address || '-'}</td><td>{item.company || '-'}</td><td>{item.deliveryDate || '-'}</td><td><strong>${Number(item.amount || 0).toFixed(2)}</strong></td><td><span className={`status ${String(item.status || 'pending').toLowerCase()}`}>{item.status || 'Pending'}</span></td><td>{action}</td></tr>;
     return <tr onClick={() => navigate(`/customers/${item._id}`)} className="clickable-row"><td>{person(item.name, item.email)}</td><td>{item.email}</td><td>{item.address}</td><td>{item.phone}</td><td>{item.registerDate}</td><td>{action}</td></tr>;
 }
 
