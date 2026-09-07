@@ -28,7 +28,13 @@ async function request(path, options = {}) {
         headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}), ...options.headers },
     });
     const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.message || 'Something went wrong');
+    if (!response.ok) {
+        if (response.status === 401) {
+            localStorage.removeItem('ep_token');
+            window.location.assign('/login');
+        }
+        throw new Error(data.message || 'Something went wrong');
+    }
     return data;
 }
 
@@ -122,7 +128,7 @@ const pageConfig = { orders: { title: 'All orders', eyebrow: 'ORDERS', descripti
 function DataPage({ type }) {
     const config = pageConfig[type]; const [items, setItems] = useState([]); const [query, setQuery] = useState(''); const [searched, setSearched] = useState(''); const [modal, setModal] = useState(null); const [pagination, setPagination] = useState({ page: 1, pages: 1, total: 0 }); const [sort, setSort] = useState('createdAt'); const [order, setOrder] = useState('desc');
     const load = () => request(`/${type}?search=${encodeURIComponent(searched)}&page=${pagination.page}&limit=8&sort=${sort}&order=${order}`).then((data) => { setItems(data[type] || []); setPagination((current) => ({ ...current, ...(data.pagination || {}) })); }).catch(() => { });
-    useEffect(load, [type, searched, pagination.page, sort, order]);
+    useEffect(() => { load(); }, [type, searched, pagination.page, sort, order]);
     const remove = async (id) => { if (!window.confirm('Delete this item?')) return; await request(`/${type}/${id}`, { method: 'DELETE' }); load(); };
     const canAdd = type === 'products' || type === 'suppliers';
     return <><PageHeading eyebrow={config.eyebrow} title={config.title} description={config.description} action={canAdd && <button className="primary-btn" onClick={() => setModal({ mode: 'add' })}><Plus size={18} /> Add a new {type === 'products' ? 'product' : 'supplier'}</button>} /><section className="panel data-panel"><div className="filter-bar"><div className="search-box"><Search size={18} /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={config.search} onKeyDown={(event) => event.key === 'Enter' && (setPagination((current) => ({ ...current, page: 1 })), setSearched(query))} /></div><button className="dark-btn" onClick={() => { setPagination((current) => ({ ...current, page: 1 })); setSearched(query); }}>Filter</button><button className="filter-reset" onClick={() => { setQuery(''); setSearched(''); setPagination((current) => ({ ...current, page: 1 })); }}>Reset</button><select className="sort-select" value={`${sort}:${order}`} onChange={(event) => { const [nextSort, nextOrder] = event.target.value.split(':'); setSort(nextSort); setOrder(nextOrder); setPagination((current) => ({ ...current, page: 1 })); }}><option value="createdAt:desc">Newest first</option><option value="createdAt:asc">Oldest first</option><option value="name:asc">Name A-Z</option><option value="name:desc">Name Z-A</option></select></div><div className="table-wrap data-table"><table><thead><tr>{config.columns.map((column) => <th key={column}>{column}</th>)}</tr></thead><tbody>{items.map((item) => <DataRow key={item._id} type={type} item={item} onEdit={() => setModal({ mode: 'edit', item })} onDelete={() => remove(item._id)} />)}</tbody></table>{!items.length && <div className="empty-state">No records found for this search.</div>}</div><Pagination pagination={pagination} onChange={(page) => setPagination((current) => ({ ...current, page }))} /></section>{modal && <EntityModal type={type} modal={modal} onClose={() => setModal(null)} onSaved={() => { setModal(null); load(); }} />}</>;
