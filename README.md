@@ -58,9 +58,21 @@ Demo account:
 
 The first login creates this Firebase user if it does not exist, then seeds products, suppliers, customers, orders, and income/expense documents.
 
+## Links
+
+- Repository: https://github.com/bgokay007-tech/Medicine-Store
+- Live page: https://medicine-store-aecfa.web.app
+
 ## Deploy
 
-Build a static site and host it on Netlify, GitHub Pages, or Render:
+The live site is on Firebase Hosting. Rebuild and publish with:
+
+```bash
+npm run build
+firebase deploy --only hosting
+```
+
+You can also build a static site and host it on Netlify, GitHub Pages, or Render:
 
 ```bash
 npm run build
